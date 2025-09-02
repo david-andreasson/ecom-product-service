@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Embeddable
-class ProductImage {
+public class ProductImage {
     @NotBlank
     @Column(nullable = false, length = 1000)
     private String url;

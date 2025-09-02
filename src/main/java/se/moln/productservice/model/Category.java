@@ -9,9 +9,7 @@ import java.util.UUID;
 
 
 @Entity
-@Table(name = "categories", indexes = {
-        @Index(name = "idx_categories_name", columnList = "name", unique = true)
-})
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
