@@ -3,11 +3,12 @@ POST http://localhost:8080/api/products/create
 Content-Type: application/json
 
 {
-  "name": "MacBook Pro 16",
+  "name": "iphone Pro 30",
   "description": "Apple laptop för utvecklare",
   "price": 29999.99,
   "currency": "SEK",
   "categoryId": null,
+  "categoryName": "Electronik",
   "stockQuantity": 10,
   "attributes": {
     "color": "space gray",
