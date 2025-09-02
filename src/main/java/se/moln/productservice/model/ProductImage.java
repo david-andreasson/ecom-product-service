@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 class ProductImage {
     @NotBlank
     @Column(nullable = false, length = 1000)
-    private String url; // Azure Blob SAS/URL
+    private String url;
 
     @Size(max = 255)
     private String fileName;
