@@ -8,6 +8,7 @@ import se.moln.productservice.model.Product;
 import se.moln.productservice.model.ProductImage;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class ProductMapper {
@@ -21,9 +22,12 @@ public class ProductMapper {
         p.setCategory(cat);
         p.setStockQuantity(req.stockQuantity() != null ? req.stockQuantity() : 0);
         if (req.attributes()!=null) p.setAttributes(new LinkedHashMap<>(req.attributes()));
+        if (req.attributes()!=null) p.setAttributes(new LinkedHashMap<>(req.attributes()));
         if (req.imageUrls()!=null) req.imageUrls().forEach(url -> p.addImage(url, null, null, null));
         return p;
     }
+
+
     public ProductResponse toResponse(Product p) {
         return new ProductResponse(
                 p.getId(), p.getName(), p.getSlug(), p.getDescription(),

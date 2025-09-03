@@ -1,4 +1,4 @@
-package se.moln.productservice.exeption;
+package se.moln.productservice.exception;
 
 
 import org.springframework.http.HttpStatus;

@@ -11,4 +11,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Page<Product> findByActiveTrue(Pageable pageable);
     Page<Product> findByCategory_IdAndActiveTrue(UUID categoryId, Pageable pageable);
     boolean existsBySlug(String slug);
+    boolean existsByNameIgnoreCase(String name);
 }
