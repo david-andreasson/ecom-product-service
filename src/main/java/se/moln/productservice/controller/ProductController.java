@@ -34,9 +34,9 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "0") int size,
-            @RequestParam(defaultValue = "0") String sortBy,
-            @RequestParam(defaultValue = "0") String sortDir){
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir){
         System.out.println("Hämtar alla produkter med paginering från kontroller");
 
         Sort sort = sortDir.equalsIgnoreCase("desc") ?

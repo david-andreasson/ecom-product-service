@@ -24,3 +24,6 @@ Content-Type: application/json
 ### hämta products
 GET http://localhost:8080/api/products?page=4&size=5&sortBy=id&sortDir=asc
 
+### hämta products all
+GET http://localhost:8080/api/products/all
+
