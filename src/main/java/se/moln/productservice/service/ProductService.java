@@ -1,6 +1,8 @@
 package se.moln.productservice.service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.dto.ProductResponse;
@@ -11,7 +13,10 @@ import se.moln.productservice.model.Product;
 import se.moln.productservice.repository.CategoryRepository;
 import se.moln.productservice.repository.ProductRepository;
 
+
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -25,8 +30,10 @@ public class ProductService {
         this.mapper = mapper;
     }
 
+
     @Transactional
     public ProductResponse create(ProductRequest req){
+        System.out.println("service");
 
         Category category = resolveCategory(req.categoryId(), req.categoryName());
         Product entity = mapper.toEntity(req, category);
@@ -41,6 +48,22 @@ public class ProductService {
 
 
         return mapper.toResponse(repo.save(entity));
+    }
+
+
+    @Transactional
+    public Page<ProductResponse> getAllProducts(Pageable pageable){
+        Page<Product> productPage = repo.findAllWithAttributes(pageable);
+        return productPage.map(mapper::toResponse);
+    }
+
+    @Transactional
+    public List<ProductResponse> getAllProductsWithoutPagination(){
+        List<Product> products = repo.findAllWithAttributes();
+
+        return products.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     private Category resolveCategory(UUID categoryId, String categoryName){

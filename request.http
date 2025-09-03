@@ -1,9 +1,9 @@
 ### Create product
-POST http://localhost:8080/api/products/create
+POST http://localhost:8080/api/products
 Content-Type: application/json
 
 {
-  "name": "iphone Pro 30",
+  "name": "iphone Pro 2000",
   "description": "Apple laptop för utvecklare",
   "price": 29999.99,
   "currency": "SEK",
@@ -19,3 +19,8 @@ Content-Type: application/json
     "https://example.com/images/macbook.jpg"
   ]
 }
+
+
+### hämta products
+GET http://localhost:8080/api/products?page=4&size=5&sortBy=id&sortDir=asc
+

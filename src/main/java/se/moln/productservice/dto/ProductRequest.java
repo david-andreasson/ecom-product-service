@@ -24,7 +24,7 @@ public record ProductRequest(
         @NotBlank String currency,
 
 
-        @Schema(example = "Elektronik", nullable = true,
+        @Schema(example = "null", nullable = true,
                 description = "Valfritt. Kategori-ID om du vill länka till befintlig kategori")
         UUID categoryId,
 
