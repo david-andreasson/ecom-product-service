@@ -3,6 +3,7 @@ package se.moln.productservice.service;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.dto.ProductResponse;
@@ -12,8 +13,10 @@ import se.moln.productservice.model.Category;
 import se.moln.productservice.model.Product;
 import se.moln.productservice.repository.CategoryRepository;
 import se.moln.productservice.repository.ProductRepository;
+import static se.moln.productservice.service.ProductSpecifications.*;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,6 +63,27 @@ public class ProductService {
     @Transactional
     public List<ProductResponse> getAllProductsWithoutPagination(){
         List<Product> products = repo.findAllWithAttributes();
+
+        return products.stream()
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProductResponse> searchProducts(String name, String categoryName, BigDecimal minPrice, BigDecimal maxPrice){
+        Specification<Product> combinedSpec = fetchAttributes();;
+
+        if (name !=null){
+            combinedSpec = combinedSpec.and(hasNameLike(name));
+        }
+
+        if (categoryName != null){
+            combinedSpec = combinedSpec.and(hasCategoryName(categoryName));
+        }
+
+        combinedSpec = combinedSpec.and(hasPriceBetween(minPrice, maxPrice));
+
+        List<Product> products = repo.findAll(combinedSpec);
 
         return products.stream()
                 .map(mapper::toResponse)
