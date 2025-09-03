@@ -8,8 +8,6 @@ import se.moln.productservice.model.Product;
 import se.moln.productservice.model.ProductImage;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Component
 public class ProductMapper {
     public Product toEntity(ProductRequest req, Category cat) {
