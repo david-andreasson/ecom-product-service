@@ -3,10 +3,7 @@ package se.moln.productservice;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.NONE,
-        properties = "spring.main.web-application-type=none"
-)
+@SpringBootTest
 class ProductServiceApplicationTests {
 
     @Test
@@ -14,3 +11,4 @@ class ProductServiceApplicationTests {
     }
 
 }
+

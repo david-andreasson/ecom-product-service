@@ -54,7 +54,7 @@ class ProductServiceTest {
     void setUp() {
         productId = UUID.randomUUID();
         categoryId = UUID.randomUUID();
-
+        
         category = new Category();
         category.setName("Electronics");
         category.setSlug("electronics");
@@ -125,7 +125,7 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.create(productRequest))
                 .isInstanceOf(DuplicateProductException.class)
                 .hasMessageContaining("Slug already exists");
-
+        
         verify(productRepository, never()).save(any());
     }
 
@@ -141,28 +141,21 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.create(productRequest))
                 .isInstanceOf(DuplicateProductException.class)
                 .hasMessageContaining("Product name already exists");
-
+        
         verify(productRepository, never()).save(any());
     }
 
     @Test
     void create_WithNewCategoryName_ShouldCreateCategory() {
+        // Given
         ProductRequest requestWithNewCategory = new ProductRequest(
-                "Test Product",
-                "Test Description",
-                BigDecimal.valueOf(99.99),
-                "SEK",
-                null,
-                "New Category",
-                10,
-                new HashMap<>(),
-                Collections.emptyList()
+                "Test Product", "Test Description", BigDecimal.valueOf(99.99), "SEK",
+                UUID.randomUUID(), "New Category", 10, new HashMap<>(), Arrays.asList()
         );
-
         Category newCategory = new Category();
         newCategory.setName("New Category");
         newCategory.setSlug("new-category");
-
+        
         when(categoryRepository.findByNameIgnoreCase("New Category")).thenReturn(Optional.empty());
         when(categoryRepository.save(any(Category.class))).thenReturn(newCategory);
         when(productMapper.toEntity(any(ProductRequest.class), any(Category.class))).thenReturn(product);
@@ -182,22 +175,15 @@ class ProductServiceTest {
 
     @Test
     void create_WithoutCategoryInfo_ShouldUseUncategorized() {
+        // Given
         ProductRequest requestWithoutCategory = new ProductRequest(
-                "Test Product",
-                "Test Description",
-                BigDecimal.valueOf(99.99),
-                "SEK",
-                null,
-                null,
-                10,
-                new HashMap<>(),
-                Collections.emptyList()
+                "Test Product", "Test Description", BigDecimal.valueOf(99.99), "SEK",
+                null, null, 10, new HashMap<>(), Arrays.asList()
         );
-
         Category uncategorized = new Category();
         uncategorized.setName("Uncategorized");
         uncategorized.setSlug("uncategorized");
-
+        
         when(categoryRepository.findByNameIgnoreCase("Uncategorized")).thenReturn(Optional.of(uncategorized));
         when(productMapper.toEntity(any(ProductRequest.class), any(Category.class))).thenReturn(product);
         when(productRepository.existsBySlug(anyString())).thenReturn(false);
@@ -220,7 +206,7 @@ class ProductServiceTest {
         Pageable pageable = PageRequest.of(0, 5);
         List<Product> products = Arrays.asList(product);
         Page<Product> productPage = new PageImpl<>(products, pageable, 1);
-
+        
         when(productRepository.findAllWithAttributes(pageable)).thenReturn(productPage);
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
@@ -259,7 +245,7 @@ class ProductServiceTest {
         BigDecimal minPrice = BigDecimal.valueOf(50);
         BigDecimal maxPrice = BigDecimal.valueOf(150);
         List<Product> products = Arrays.asList(product);
-
+        
         when(productRepository.findAll(any(Specification.class))).thenReturn(products);
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
@@ -291,13 +277,15 @@ class ProductServiceTest {
 
     @Test
     void create_WithInvalidCategoryId_ShouldThrowIllegalArgumentException() {
+        // Given
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> productService.create(productRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Category not found");
-
+        
         verify(productRepository, never()).save(any());
     }
 }
+
