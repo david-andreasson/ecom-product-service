@@ -6,6 +6,8 @@ import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 public class OpenApiConfig {
     @Bean
@@ -14,6 +16,11 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Product Service API")
                         .version("v1")
-                        .description("Product endpoints"));
+                        .description("Product endpoints"))
+                .servers(List.of(
+                        new io.swagger.v3.oas.models.servers.Server()
+                                .url("https://productservice.drillbi.se")
+                                .description("Production server")
+                ));
     }
 }
