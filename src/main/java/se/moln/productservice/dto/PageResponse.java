@@ -21,7 +21,7 @@ public class PageResponse<T> {
         this.pageNumber = page.getNumber();
         this.pageSize = page.getSize();
         this.totalElements = page.getTotalElements();
-        this.totalPages = page.getTotalPages();
+        this.totalPages = Math.max(1, page.getTotalPages());
         this.first = page.isFirst();
         this.last = page.isLast();
         this.empty = page.isEmpty();
