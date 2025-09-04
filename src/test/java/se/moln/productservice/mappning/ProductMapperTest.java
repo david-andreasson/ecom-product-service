@@ -7,6 +7,7 @@ import se.moln.productservice.dto.ProductResponse;
 import se.moln.productservice.model.Category;
 import se.moln.productservice.model.Product;
 import se.moln.productservice.model.ProductImage;
+import java.util.UUID;
 
 import java.math.BigDecimal;
 import java.util.*;

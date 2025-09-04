@@ -112,9 +112,4 @@ GET http://localhost:8080/api/products?page=99999
 
 ### 10. Ogiltigt sorteringsfält
 # Förväntat resultat: 500 Internal Server Error (Spring kan inte sortera efter ett fält som inte finns).
-GET http://localhost:8080/api/products?sortBy=nonexistentField
 
-
-
-### Get product by ID (read-only)
-GET http://localhost:8081/api/products/{{productId}}

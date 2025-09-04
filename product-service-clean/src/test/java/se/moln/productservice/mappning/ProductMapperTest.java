@@ -1,4 +1,5 @@
 package se.moln.productservice.mappning;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.model.Product;
@@ -18,7 +19,7 @@ class ProductMapperTest {
                 "desc",
                 new BigDecimal("19999.90"),
                 "SEK",
-                null,
+                UUID.randomUUID(), "Electronics",
                 3,
                 Map.of("ram", "32GB"),
                 List.of("https://img")
@@ -35,3 +36,6 @@ class ProductMapperTest {
         assertEquals("macbook-pro-16-v-r-2025", p.getSlug());
     }
 }
+
+
+

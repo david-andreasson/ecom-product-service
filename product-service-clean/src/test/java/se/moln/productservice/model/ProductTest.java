@@ -52,3 +52,4 @@ class ProductTest {
         assertThrows(IllegalArgumentException.class, () -> p.releaseStock(-1));
     }
 }
+
