@@ -8,35 +8,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import se.moln.productservice.dto.PageResponse;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.dto.ProductResponse;
-import se.moln.productservice.service.ProductImageAppService;
 import se.moln.productservice.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.MediaType;
 
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService service;
-    private final ProductImageAppService imageService;
 
-    public ProductController(ProductService service,
-                             ProductImageAppService imageService) {
+    public ProductController(ProductService service) {
         this.service = service;
-        this.imageService = imageService;
     }
 
 
@@ -73,6 +61,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+  
     @Operation(
             summary = "Ladda upp produktbild",
             description = "Skicka som multipart/form-data med fältet 'file'. Bilden sparas lokalt och kopplas till produkten."
@@ -111,4 +100,5 @@ public class ProductController {
 
 
 
+}
 }
