@@ -77,6 +77,21 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String categoryName,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice
+
+    ) {
+        List<ProductResponse> products = service.searchProducts(name, categoryName, minPrice, maxPrice);
+        System.out.println("hello");
+
+        return ResponseEntity.ok(products);
+    }
+  
+  
   
     @Operation(
             summary = "Ladda upp produktbild",
