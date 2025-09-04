@@ -20,7 +20,10 @@ public class OpenApiConfig {
                 .servers(List.of(
                         new io.swagger.v3.oas.models.servers.Server()
                                 .url("https://productservice.drillbi.se")
-                                .description("Production server")
+                                .description("Production server Production Service"),
+                        new io.swagger.v3.oas.models.servers.Server()
+                                .url("https://userservice.drillbi.se")
+                                .description("Production server User Service")
                 ));
     }
 }
