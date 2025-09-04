@@ -24,6 +24,7 @@ import se.moln.productservice.service.ProductService;
 
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
