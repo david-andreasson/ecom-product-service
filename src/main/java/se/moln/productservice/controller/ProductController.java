@@ -43,6 +43,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
         System.out.println("kontroller");
+        System.out.println("hello");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
     }
 
@@ -107,5 +108,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(imageService.uploadImage(id, file));
     }
+
+
 
 }
