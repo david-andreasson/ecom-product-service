@@ -68,6 +68,7 @@ public class ProductController {
 
     ) {
         List<ProductResponse> products = service.searchProducts(name, categoryName, minPrice, maxPrice);
+        System.out.println("hello");
 
         return ResponseEntity.ok(products);
     }
