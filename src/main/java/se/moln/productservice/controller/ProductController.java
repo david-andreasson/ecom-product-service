@@ -31,6 +31,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
         System.out.println("kontroller");
+        System.out.println("hello");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
     }
 
@@ -60,4 +61,44 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+  
+    @Operation(
+            summary = "Ladda upp produktbild",
+            description = "Skicka som multipart/form-data med fältet 'file'. Bilden sparas lokalt och kopplas till produkten."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Created",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404", description = "Product not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    @PostMapping(
+            path = "/{id}/images",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ProductResponse> uploadImage(
+            @Parameter(
+                    name = "id",
+                    description = "Produktens UUID",
+                    example = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3"
+            )
+            @PathVariable UUID id,
+
+            @Parameter(description = "Bildfil (jpg/png/webp)")
+            @RequestPart("file") MultipartFile file
+    ) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(imageService.uploadImage(id, file));
+    }
+
+
+
+}
 }
