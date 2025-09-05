@@ -60,7 +60,7 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDir){
+            @RequestParam(defaultValue = "asc") String sortDir) {
         System.out.println("Hämtar alla produkter med paginering från kontroller");
 
         Sort sort = sortDir.equalsIgnoreCase("desc") ?
@@ -73,7 +73,7 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ProductResponse>> getAllProductsWithoutPagination(){
+    public ResponseEntity<List<ProductResponse>> getAllProductsWithoutPagination() {
         List<ProductResponse> products = service.getAllProductsWithoutPagination();
         return ResponseEntity.ok(products);
     }
