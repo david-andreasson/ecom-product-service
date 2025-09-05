@@ -20,8 +20,9 @@ import se.moln.productservice.dto.PageResponse;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.dto.ProductResponse;
 import se.moln.productservice.service.ProductImageAppService;
+import se.moln.productservice.service.ProductQueryService;
+import se.moln.productservice.service.ProductReadService;
 import se.moln.productservice.service.ProductService;
-
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,18 +33,20 @@ import java.util.UUID;
 @RequestMapping("/api/products")
 public class ProductController {
 
-
     private final ProductService service;
     private final ProductImageAppService imageService;
+    private final ProductReadService readService;
+    private final ProductQueryService queryService;
 
     public ProductController(ProductService service,
-                             ProductImageAppService imageService) {
+                             ProductImageAppService imageService,
+                             ProductReadService readService,
+                             ProductQueryService queryService) {
         this.service = service;
         this.imageService = imageService;
+        this.readService = readService;
+        this.queryService = queryService;
     }
-
-
-
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
@@ -64,11 +67,8 @@ public class ProductController {
                 Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
-
         Page<ProductResponse> products = service.getAllProducts(pageable);
-
         PageResponse<ProductResponse> response = new PageResponse<>(products);
-
         return ResponseEntity.ok(response);
     }
 
@@ -84,16 +84,13 @@ public class ProductController {
             @RequestParam(required = false) String categoryName,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice
-
     ) {
         List<ProductResponse> products = service.searchProducts(name, categoryName, minPrice, maxPrice);
         System.out.println("hello");
-
         return ResponseEntity.ok(products);
     }
-  
-  
-  
+
+    // === Bilduppladdning (återställd) ===
     @Operation(
             summary = "Ladda upp produktbild",
             description = "Skicka som multipart/form-data med fältet 'file'. Bilden sparas lokalt och kopplas till produkten."
@@ -116,17 +113,35 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ProductResponse> uploadImage(
-            @Parameter(
-                    name = "id",
-                    description = "Produktens UUID",
-                    example = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3"
-            )
+            @Parameter(name = "id", description = "Produktens UUID", example = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3")
             @PathVariable UUID id,
-
             @Parameter(description = "Bildfil (jpg/png/webp)")
             @RequestPart("file") MultipartFile file
     ) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(imageService.uploadImage(id, file));
+    }
+
+    // === Hämta produkt per ID (flyttat in) ===
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(readService.getById(id));
+    }
+
+    // === Lista aktiva (unik path för att undvika krock med root) ===
+    @GetMapping("/active")
+    public ResponseEntity<Page<ProductResponse>> listActive(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(queryService.listActive(page, size));
+    }
+
+    // === Lista per kategori (flyttat in) ===
+    @GetMapping("/by-category/{categoryId}")
+    public ResponseEntity<Page<ProductResponse>> listByCategory(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(queryService.listByCategory(categoryId, page, size));
     }
 }
