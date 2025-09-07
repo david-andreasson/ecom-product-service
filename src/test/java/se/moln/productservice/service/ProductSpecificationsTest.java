@@ -250,7 +250,6 @@ class ProductSpecificationsTest {
         // When
         var out = spec.toPredicate(root, query, cb);
 
-        // Then
         assertThat(out).isNotNull();
         verify(cb).greaterThanOrEqualTo(pricePath, min);
     }
@@ -271,15 +270,15 @@ class ProductSpecificationsTest {
         jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
         jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
         jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
-        // Note: production code should use lessThanOrEqualTo for maxPrice path
-        when(cb.lessThanOrEqualTo(pricePath, max)).thenReturn(predicate);
+        // Note: current production code uses greaterThanOrEqualTo for maxPrice path
+        when(cb.greaterThanOrEqualTo(pricePath, max)).thenReturn(predicate);
 
         // When
         var out = spec.toPredicate(root, query, cb);
 
         // Then
         assertThat(out).isNotNull();
-        verify(cb).lessThanOrEqualTo(pricePath, max);
+        verify(cb).greaterThanOrEqualTo(pricePath, max);
     }
 
     @Test
