@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,8 @@ import java.util.UUID;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     private final ProductService service;
     private final ProductImageAppService imageService;
     private final ProductReadService readService;
@@ -56,8 +60,8 @@ public class ProductController {
     })
     @PostMapping
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
-        System.out.println("kontroller");
-        System.out.println("hello");
+        log.info("Create product request received");
+        log.debug("Create payload received");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
     }
 
@@ -72,7 +76,7 @@ public class ProductController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir) {
-        System.out.println("Hämtar alla produkter med paginering från kontroller");
+        log.debug("Fetching products page={} size={} sortBy={} sortDir={}", page, size, sortBy, sortDir);
 
         Sort sort = sortDir.equalsIgnoreCase("desc") ?
                 Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
@@ -90,6 +94,7 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<List<ProductResponse>> getAllProductsWithoutPagination() {
         List<ProductResponse> products = service.getAllProductsWithoutPagination();
+        log.debug("Fetched all products count={}", products.size());
         return ResponseEntity.ok(products);
     }
 
@@ -105,7 +110,7 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice
     ) {
         List<ProductResponse> products = service.searchProducts(name, categoryName, minPrice, maxPrice);
-        System.out.println("hello");
+        log.debug("Search completed name={} categoryName={} minPrice={} maxPrice={} count={}", name, categoryName, minPrice, maxPrice, products.size());
         return ResponseEntity.ok(products);
     }
 

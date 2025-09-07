@@ -1,5 +1,7 @@
 package se.moln.productservice.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +18,6 @@ import se.moln.productservice.repository.ProductRepository;
 
 import static se.moln.productservice.service.ProductSpecifications.*;
 
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository repo;
     private final CategoryRepository catRepo;
     private final ProductMapper mapper;
@@ -34,10 +36,9 @@ public class ProductService {
         this.mapper = mapper;
     }
 
-
     @Transactional
     public ProductResponse create(ProductRequest req) {
-        System.out.println("service");
+        log.debug("Create product in service layer");
 
         Category category = resolveCategory(req.categoryId(), req.categoryName());
         Product entity = mapper.toEntity(req, category);
@@ -50,13 +51,14 @@ public class ProductService {
             throw new DuplicateProductException("Product name already exists: " + entity.getName());
         }
 
-
-        return mapper.toResponse(repo.save(entity));
+        Product saved = repo.save(entity);
+        log.info("Product created id={} name={}", saved.getId(), saved.getName());
+        return mapper.toResponse(saved);
     }
-
 
     @Transactional
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        log.debug("Get all products in service layer");
         Page<Product> productPage = repo.findAllWithAttributes(pageable);
         return productPage.map(mapper::toResponse);
     }
