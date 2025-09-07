@@ -178,4 +178,33 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(queryService.listByCategory(categoryId, page, size));
     }
+
+
+    @Operation(summary = "Uppdatera en befintlig produkt", description = "Uppdaterar alla ändringsbara fält för en produkt baserat på ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Produkten uppdaterades framgångsrikt."),
+            @ApiResponse(responseCode = "404", description = "Produkten med det angivna ID:t hittades inte.")
+    })
+    @PutMapping("{id}")
+    public ResponseEntity<ProductResponse> update(
+            @PathVariable UUID id,
+            @Valid @RequestBody ProductRequest req){
+
+        ProductResponse updateProduct = service.update(id, req);
+        return ResponseEntity.ok(updateProduct);
+    }
+
+
+
+    @Operation(summary = "Ta bort en produkt", description = "Tar bort en produkt från databasen baserat på dess ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Produkten togs bort framgångsrikt."),
+            @ApiResponse(responseCode = "404", description = "Produkten med det angivna ID:t hittades inte.")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+        service.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

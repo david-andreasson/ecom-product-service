@@ -21,11 +21,13 @@ Content-Type: application/json
 }
 
 
+
+
 ### hämta products
 GET http://localhost:8080/api/products?page=4&size=5&sortBy=id&sortDir=asc
 
 ### hämta products all
-GET http://localhost:8080/api/products/all
+GET http://localhost:8081/api/products/all
 
 
 #####################################
@@ -118,3 +120,136 @@ GET http://localhost:8080/api/products?sortBy=nonexistentField
 
 ### Get product by ID (read-only)
 GET http://localhost:8081/api/products/{{productId}}
+
+
+#########################################################
+@host = http://localhost:8081
+
+### Skapa en produkt
+// Skapa en initial produkt.
+POST {{host}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Original Product",
+  "description": "This is the initial product.",
+  "price": 99.99,
+  "currency": "USD",
+  "categoryId": null,
+  "stockQuantity": 50,
+  "active": true,
+  "attributes": {
+    "size": "M",
+    "material": "cotton"
+  },
+  "imageUrls": [
+    "https://example.com/initial-image-1.jpg",
+    "https://example.com/initial-image-2.jpg"
+  ]
+}
+
+
+### Testfall 1: Uppdatera grundläggande fält
+// Uppdaterar namn, pris, beskrivning, och behåller befintliga bilder.
+PUT {{host}}/api/products/cfb4666f-20bd-418b-899e-5130b5eaaa84
+Content-Type: application/json
+
+{
+  "name": "Updated Smartphone Model",
+  "description": "Updated flagship phone with new features.",
+  "price": 1499.00,
+  "currency": "EUR",
+  "categoryId": null,
+  "stockQuantity": 50,
+  "active": true,
+  "attributes": {
+    "size": "M",
+    "material": "cotton"
+  },
+  "imageUrls": [
+    "https://example.com/initial-image-1.jpg",
+    "https://example.com/initial-image-2.jpg"
+  ]
+}
+
+
+### Testfall 2: Uppdatera kategori med namn (skapa ny kategori) och ändra bilder
+// Denna testar om en ny kategori kan skapas och länkas, samtidigt som bilderna byts ut.
+PUT {{host}}/api/products/cfb4666f-20bd-418b-899e-5130b5eaaa84
+Content-Type: application/json
+
+{
+  "name": "Updated Smartphone Model",
+  "description": "Updated flagship phone with new features.",
+  "price": 1499.00,
+  "currency": "EUR",
+  "categoryName": "Smartphones",
+  "stockQuantity": 50,
+  "active": true,
+  "attributes": {
+    "size": "M",
+    "material": "cotton"
+  },
+  "imageUrls": [
+    "https://example.com/new-smartphone-front.jpg",
+    "https://example.com/new-smartphone-back.jpg",
+    "https://example.com/new-smartphone-side.jpg"
+  ]
+}
+
+
+### Testfall 3: Uppdatera attribut, stock quantity och ta bort bilder
+// Denna testar om attributen kan bytas ut, lagersaldot ändras och alla bilder tas bort genom att skicka en tom lista.
+PUT {{host}}/api/products/cfb4666f-20bd-418b-899e-5130b5eaaa84
+Content-Type: application/json
+
+{
+  "name": "Updated Smartphone Model",
+  "description": "Updated flagship phone with new features.",
+  "price": 1499.00,
+  "currency": "EUR",
+  "categoryId": null,
+  "stockQuantity": 45,
+  "active": true,
+  "attributes": {
+    "color": "space black",
+    "storage": "512GB"
+  },
+  "imageUrls": []
+}
+
+
+### Testfall 4: Felhantering - ogiltigt produkt-ID
+// Ska returnera 404 (Not Found) eftersom ID:t inte existerar.
+PUT {{host}}/api/products/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "name": "Non-existent product",
+  "description": "Should fail",
+  "price": 100.00,
+  "currency": "USD",
+  "categoryId": null,
+  "stockQuantity": 1,
+  "active": true,
+  "imageUrls": []
+}
+
+
+### Testfall 5: Felhantering - ogiltig categoryId
+// Ska returnera 404 (Not Found) eftersom kategorin inte finns.
+PUT {{host}}/api/products/cfb4666f-20bd-418b-899e-5130b5eaaa84
+Content-Type: application/json
+
+{
+  "name": "Product with invalid category",
+  "description": "Should fail",
+  "price": 100.00,
+  "currency": "USD",
+  "categoryId": "00000000-0000-0000-0000-000000000000",
+  "stockQuantity": 1,
+  "active": true,
+  "imageUrls": [
+    "https://example.com/image.jpg"
+  ]
+}
