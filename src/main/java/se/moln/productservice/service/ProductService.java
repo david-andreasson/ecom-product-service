@@ -75,8 +75,6 @@ public class ProductService {
     @Transactional
     public List<ProductResponse> searchProducts(String name, String categoryName, BigDecimal minPrice, BigDecimal maxPrice) {
         Specification<Product> combinedSpec = fetchAttributes();
-        ;
-
         if (name != null) {
             combinedSpec = combinedSpec.and(hasNameLike(name));
         }
