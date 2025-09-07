@@ -41,8 +41,8 @@ class AppHealthIndicatorTest {
         Mockito.when(env.getProperty("spring.application.name", "product-service")).thenReturn("product-service");
         Mockito.when(env.getActiveProfiles()).thenReturn(new String[]{});
 
-        // Use an invalid path on Windows to provoke an exception inside storage section
-        String invalidPath = "C:<>|?*";
+        // Use a universally invalid path (contains NUL) to provoke an exception inside storage section on all OS
+        String invalidPath = "bad\u0000path";
         AppHealthIndicator ind = new AppHealthIndicator(repo, env, invalidPath);
 
         var health = ind.health();
