@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import se.moln.productservice.dto.ProductRequest;
 import se.moln.productservice.dto.ProductResponse;
 import se.moln.productservice.exception.DuplicateProductException;
+import se.moln.productservice.exception.ResourceNotFoundException;
 import se.moln.productservice.mappning.ProductMapper;
 import se.moln.productservice.model.Category;
 import se.moln.productservice.model.Product;
@@ -116,6 +117,50 @@ public class ProductService {
                     c.setSlug("Uncategorized");
                     return catRepo.save(c);
                 });
+    }
+
+    @Transactional
+    public ProductResponse update(UUID id, ProductRequest req){
+        Product productToUpdate = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found."));
+
+        productToUpdate.setName(req.name());
+        productToUpdate.setSlug(slugify(req.name()));
+        productToUpdate.setDescription(req.description());
+        productToUpdate.setPrice(req.price());
+        productToUpdate.setCurrency(req.currency());
+        productToUpdate.setStockQuantity(req.stockQuantity());
+
+        if (req.categoryId() != null){
+            Category category = catRepo.findById(req.categoryId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Category with ID " + req.categoryId() + " not found."));
+            productToUpdate.setCategory(category);
+        }else  if (req.categoryName() != null && !req.categoryName().isBlank()){
+            Category category = catRepo.findByNameIgnoreCase(req.categoryName())
+                    .orElseGet(() -> {
+                        Category newCategory = new Category();
+                        newCategory.setName(req.categoryName());
+                        return catRepo.save(newCategory);
+                    });
+            productToUpdate.setCategory(category);
+        } else {
+            productToUpdate.setCategory(null);
+        }
+
+        if (req.attributes() != null) {
+            req.attributes().forEach(productToUpdate::putAttribute);
+        }
+
+        Product updatedProduct = repo.save(productToUpdate);
+        return mapper.toResponse(updatedProduct);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        Product productToDelete = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with ID " + id + " not found."));
+
+        repo.delete(productToDelete);
     }
 
     private String slugify(String s) {
