@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.actuate.health.HealthComponent;
 import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.boot.actuate.info.InfoEndpoint;
@@ -21,15 +21,14 @@ import java.util.Map;
 
 @RestController
 @Tag(name = "Admin Health", description = "Rich health information for administrators")
-@ConditionalOnBean({HealthEndpoint.class, InfoEndpoint.class})
 public class AdminHealthController {
 
-    private final HealthEndpoint healthEndpoint;
-    private final InfoEndpoint infoEndpoint;
+    private final ObjectProvider<HealthEndpoint> healthEndpointProvider;
+    private final ObjectProvider<InfoEndpoint> infoEndpointProvider;
 
-    public AdminHealthController(HealthEndpoint healthEndpoint, InfoEndpoint infoEndpoint) {
-        this.healthEndpoint = healthEndpoint;
-        this.infoEndpoint = infoEndpoint;
+    public AdminHealthController(ObjectProvider<HealthEndpoint> healthEndpointProvider, ObjectProvider<InfoEndpoint> infoEndpointProvider) {
+        this.healthEndpointProvider = healthEndpointProvider;
+        this.infoEndpointProvider = infoEndpointProvider;
     }
 
     @GetMapping("/api/admin/health-details")
@@ -43,6 +42,13 @@ public class AdminHealthController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> healthDetails() {
         Map<String, Object> body = new HashMap<>();
+        HealthEndpoint healthEndpoint = healthEndpointProvider.getIfAvailable();
+        InfoEndpoint infoEndpoint = infoEndpointProvider.getIfAvailable();
+        if (healthEndpoint == null || infoEndpoint == null) {
+            body.put("status", "UNKNOWN");
+            body.put("message", "Actuator Health/Info endpoints are not available in this environment");
+            return ResponseEntity.ok(body);
+        }
         HealthComponent health = healthEndpoint.health();
         Map<String, Object> info = infoEndpoint.info();
         body.put("status", health.getStatus().getCode());
