@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/info").hasRole("ADMIN")
                 // Public API endpoints (adjust as needed)
-                .requestMatchers("/api/products/**").permitAll()
+                .requestMatchers("/api/products/**", "/api/inventory/**").permitAll()
                 // Admin endpoints must be ADMIN
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 // everything else authenticated by default
