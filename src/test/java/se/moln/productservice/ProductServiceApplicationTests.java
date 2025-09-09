@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.mockito.Mockito;
 import se.moln.productservice.repository.CategoryRepository;
-import se.moln.productservice.repository.InventoryRepository;
 import se.moln.productservice.repository.ProductRepository;
 
 @SpringBootTest(

@@ -253,3 +253,162 @@ Content-Type: application/json
     "https://example.com/image.jpg"
   ]
 }
+
+######################################
+### ------------------------------------------------------------
+### ENV
+### ------------------------------------------------------------
+@baseUrl = http://localhost:8081
+@products = {{baseUrl}}/api/inventory
+@contentType = application/json
+
+# Sätt detta till en existerande produkt
+@productId = 69af3615-825c-4014-87b8-91bfce23c3bd
+
+### ------------------------------------------------------------
+### 1) PURCHASE — OK (normalfall)
+### ------------------------------------------------------------
+# @name purchase_ok
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 2
+}
+
+### ------------------------------------------------------------
+### 2) PURCHASE — OK (gränsvärde: 1 st)
+### ------------------------------------------------------------
+# @name purchase_boundary_one
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 1
+}
+
+### ------------------------------------------------------------
+### 3) PURCHASE — OK (exakt kvarvarande; sätt rätt siffra före körning)
+### ------------------------------------------------------------
+# @name purchase_exact_remaining
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 9
+}
+
+### ------------------------------------------------------------
+### 4) PURCHASE — INSUFFICIENT STOCK (409 Problem Details)
+###    quantity > återstående lager
+### ------------------------------------------------------------
+# @name purchase_insufficient_stock
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 9999
+}
+
+### ------------------------------------------------------------
+### 5) PURCHASE — VALIDATION ERROR (400) quantity = 0
+### ------------------------------------------------------------
+# @name purchase_qty_zero
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 0
+}
+
+### ------------------------------------------------------------
+### 6) PURCHASE — VALIDATION ERROR (400) quantity < 0
+### ------------------------------------------------------------
+# @name purchase_qty_negative
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": -3
+}
+
+### ------------------------------------------------------------
+### 7) PURCHASE — VALIDATION ERROR (400) fel typ (string istället för number)
+### ------------------------------------------------------------
+# @name purchase_qty_wrong_type
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": "tre"
+}
+
+### ------------------------------------------------------------
+### 8) PURCHASE — BAD REQUEST (400) saknar body
+### ------------------------------------------------------------
+# @name purchase_missing_body
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+### ------------------------------------------------------------
+### 9) PURCHASE — BAD REQUEST (400) saknar fältet quantity
+### ------------------------------------------------------------
+# @name purchase_missing_field
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+}
+
+### ------------------------------------------------------------
+### 10) PURCHASE — NOT FOUND (404) ogiltigt produkt-id
+### ------------------------------------------------------------
+# @name purchase_not_found
+POST {{products}}/00000000-0000-0000-0000-000000000000/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 1
+}
+
+### ------------------------------------------------------------
+### 11) PURCHASE — TYPE MISMATCH (400) felaktigt UUID-format i path
+### ------------------------------------------------------------
+# @name purchase_type_mismatch_uuid
+POST {{products}}/not-a-uuid/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 1
+}
+
+### ------------------------------------------------------------
+### 12) PURCHASE — UNSUPPORTED MEDIA TYPE (415)
+###     (skicka fel content-type för att verifiera 415)
+### ------------------------------------------------------------
+# @name purchase_unsupported_media_type
+POST {{products}}/{{productId}}/purchase
+Content-Type: text/plain
+
+{"quantity": 1}
+
+### ------------------------------------------------------------
+### 13) PURCHASE — KONKURRENS (409) *manuellt scenario*
+###     Kör dessa två snabbt efter varandra om lagret inte räcker för båda.
+###     En av dem kan slå i optimistisk låsning eller insufficient stock.
+### ------------------------------------------------------------
+# @name purchase_concurrency_a
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 5
+}
+
+### @name purchase_concurrency_b
+POST {{products}}/{{productId}}/purchase
+Content-Type: {{contentType}}
+
+{
+  "quantity": 5
+}

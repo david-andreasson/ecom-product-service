@@ -18,13 +18,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import se.moln.productservice.dto.PageResponse;
-import se.moln.productservice.dto.ProductRequest;
-import se.moln.productservice.dto.ProductResponse;
-import se.moln.productservice.service.ProductImageAppService;
-import se.moln.productservice.service.ProductQueryService;
-import se.moln.productservice.service.ProductReadService;
-import se.moln.productservice.service.ProductService;
+import se.moln.productservice.dto.*;
+import se.moln.productservice.service.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -41,15 +36,18 @@ public class ProductController {
     private final ProductImageAppService imageService;
     private final ProductReadService readService;
     private final ProductQueryService queryService;
+    private final InventoryService inventoryService;
 
     public ProductController(ProductService service,
                              ProductImageAppService imageService,
                              ProductReadService readService,
-                             ProductQueryService queryService) {
+                             ProductQueryService queryService,
+                             InventoryService inventoryService) {
         this.service = service;
         this.imageService = imageService;
         this.readService = readService;
         this.queryService = queryService;
+        this.inventoryService = inventoryService;
     }
 
     @Operation(summary = "Skapa en ny produkt", description = "Skapar en produkt baserat på inskickad JSON-body.")
@@ -62,8 +60,13 @@ public class ProductController {
     public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest req) {
         log.info("Create product request received");
         log.debug("Create payload received");
+
+
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
+        //return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
 
     @Operation(summary = "Lista produkter (paginering)", description = "Hämtar en paginerad lista av produkter. Styr resultatet med parametrarna page, size, sortBy och sortDir.")
     @ApiResponses({
@@ -206,5 +209,4 @@ public class ProductController {
         service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

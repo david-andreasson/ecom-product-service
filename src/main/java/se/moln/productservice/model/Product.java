@@ -78,6 +78,14 @@ public class Product {
     @Column(nullable = false)
     private OffsetDateTime updatedAt;
 
+//    public void reserveStock(int quantity) {
+//        if (quantity <= 0) throw new IllegalArgumentException("quantity måste vara > 0");
+//        if (this.stockQuantity < quantity) {
+//            throw new IllegalStateException("Otillräckligt lager");
+//        }
+//        this.stockQuantity -= quantity;
+//    }
+
     public void reserveStock(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("quantity måste vara > 0");
         if (this.stockQuantity < quantity) {
@@ -85,7 +93,6 @@ public class Product {
         }
         this.stockQuantity -= quantity;
     }
-
     public void releaseStock(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException("quantity måste vara > 0");
         this.stockQuantity += quantity;
