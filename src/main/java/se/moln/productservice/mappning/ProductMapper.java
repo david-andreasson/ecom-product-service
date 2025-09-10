@@ -44,7 +44,8 @@ public class ProductMapper {
                 p.getId(), p.getName(), p.getSlug(), p.getDescription(),
                 p.getPrice(), p.getCurrency(),
                 p.getCategory() != null ? p.getCategory().getName() : null,
-                p.getStockQuantity(), p.isActive(),
+                p.getStockQuantity(),
+                p.isActive(),
                 attrs, images
         );
     }
