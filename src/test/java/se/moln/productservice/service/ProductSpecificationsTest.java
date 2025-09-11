@@ -60,6 +60,53 @@ class ProductSpecificationsTest {
     }
 
     @Test
+    void hasCategoryName_ToPredicate_JoinsCategory() {
+        var spec = ProductSpecifications.hasCategoryName("Electronics");
+
+        @SuppressWarnings("unchecked")
+        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
+        @SuppressWarnings("unchecked")
+        jakarta.persistence.criteria.Join<Object,Object> join = mock(jakarta.persistence.criteria.Join.class);
+        when(root.join("category")).thenReturn(join);
+
+        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
+        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
+        jakarta.persistence.criteria.Path<Object> namePath = mock(jakarta.persistence.criteria.Path.class);
+        when(join.get("name")).thenReturn(namePath);
+        jakarta.persistence.criteria.Predicate pred = mock(jakarta.persistence.criteria.Predicate.class);
+        when(cb.equal(namePath, "Electronics")).thenReturn(pred);
+
+        var out = spec.toPredicate(root, query, cb);
+        assertThat(out).isNotNull();
+        verify(root).join("category");
+        verify(cb).equal(namePath, "Electronics");
+    }
+
+    @Test
+    void hasNameLike_ToPredicate_UsesLowerAndLike() {
+        var spec = ProductSpecifications.hasNameLike("Phone");
+
+        @SuppressWarnings("unchecked")
+        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
+        @SuppressWarnings("unchecked")
+        jakarta.persistence.criteria.Path<Object> namePath = mock(jakarta.persistence.criteria.Path.class);
+        when(root.get("name")).thenReturn(namePath);
+
+        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
+        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
+        jakarta.persistence.criteria.Expression<String> lowerExpr = mock(jakarta.persistence.criteria.Expression.class);
+        when(cb.lower((jakarta.persistence.criteria.Expression) namePath)).thenReturn(lowerExpr);
+        jakarta.persistence.criteria.Predicate pred = mock(jakarta.persistence.criteria.Predicate.class);
+        when(cb.like(lowerExpr, "%phone%"))
+                .thenReturn(pred);
+
+        var out = spec.toPredicate(root, query, cb);
+        assertThat(out).isNotNull();
+        verify(cb).lower((jakarta.persistence.criteria.Expression) namePath);
+        verify(cb).like(lowerExpr, "%phone%");
+    }
+
+    @Test
     void hasCategoryName_WithEmptyString_ShouldCreateNonNullSpecification() {
         // Given
         String categoryName = "";
