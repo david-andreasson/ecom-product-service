@@ -95,6 +95,60 @@ class ProductServiceTest {
     }
 
     @Test
+    void update_ShouldSlugifyName() {
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
+
+        ProductRequest req = new ProductRequest(
+                "  My New Product!!  ",
+                "Desc",
+                BigDecimal.ONE,
+                "SEK",
+                null,
+                null,
+                1,
+                new HashMap<>(),
+                Collections.emptyList()
+        );
+
+        productService.update(productId, req);
+
+        org.mockito.ArgumentCaptor<Product> captor = org.mockito.ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(captor.capture());
+        assertThat(captor.getValue().getSlug()).isEqualTo("my-new-product");
+    }
+
+    @Test
+    void create_WithBlankCategoryName_ShouldCreateUncategorizedIfMissing() {
+        ProductRequest req = new ProductRequest(
+                "Name",
+                "Desc",
+                BigDecimal.TEN,
+                "SEK",
+                null,
+                "   ",
+                0,
+                new HashMap<>(),
+                Collections.emptyList()
+        );
+
+        when(categoryRepository.findByNameIgnoreCase("Uncategorized")).thenReturn(Optional.empty());
+        when(categoryRepository.save(any(Category.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(productMapper.toEntity(any(ProductRequest.class), any(Category.class))).thenReturn(product);
+        when(productRepository.existsBySlug(anyString())).thenReturn(false);
+        when(productRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+        when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
+
+        ProductResponse out = productService.create(req);
+
+        assertThat(out).isNotNull();
+        verify(categoryRepository).save(any(Category.class));
+        verify(productRepository).save(product);
+    }
+
+    @Test
     void create_WithValidData_ShouldReturnProductResponse() {
         // Given
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
@@ -212,6 +266,63 @@ class ProductServiceTest {
         assertThat(result).isNotNull();
         verify(categoryRepository).findByNameIgnoreCase("Uncategorized");
         verify(productRepository).save(product);
+    }
+
+    @Test
+    void update_WithCategoryName_NotFound_ShouldCreateCategory() {
+        ProductRequest req = new ProductRequest(
+                "Name", "Desc", BigDecimal.ONE, "SEK", null, "NewCat", 1, new HashMap<>(), Collections.emptyList()
+        );
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(categoryRepository.findByNameIgnoreCase("NewCat")).thenReturn(Optional.empty());
+        when(categoryRepository.save(any(Category.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+        when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
+
+        ProductResponse out = productService.update(productId, req);
+
+        assertThat(out).isNotNull();
+        verify(categoryRepository).save(any(Category.class));
+    }
+
+    @Test
+    void update_NoCategoryInfo_ShouldClearCategory() {
+        // product initially has a category; request provides neither id nor name -> setCategory(null)
+        product.setCategory(category);
+        ProductRequest req = new ProductRequest(
+                "Name", "Desc", BigDecimal.ONE, "SEK", null, null, 1, new HashMap<>(), Collections.emptyList()
+        );
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
+
+        ProductResponse out = productService.update(productId, req);
+
+        assertThat(out).isNotNull();
+        org.mockito.ArgumentCaptor<Product> captor = org.mockito.ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(captor.capture());
+        assertThat(captor.getValue().getCategory()).isNull();
+    }
+
+    @Test
+    void update_WithAttributes_ShouldApplyToEntity() {
+        Map<String, String> attrs = new HashMap<>();
+        attrs.put("color", "red");
+        ProductRequest req = new ProductRequest(
+                "Name", "Desc", BigDecimal.ONE, "SEK", null, null, 1, attrs, Collections.emptyList()
+        );
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
+
+        productService.update(productId, req);
+
+        org.mockito.ArgumentCaptor<Product> captor = org.mockito.ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(captor.capture());
+        assertThat(captor.getValue().getAttributes()).containsEntry("color", "red");
     }
 
     @Test

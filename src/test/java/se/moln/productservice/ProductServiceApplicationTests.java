@@ -20,11 +20,6 @@ class ProductServiceApplicationTests {
     @TestConfiguration
     static class MockConfig {
         @Bean
-        InventoryRepository inventoryRepository() {
-            return Mockito.mock(InventoryRepository.class);
-        }
-
-        @Bean
         ProductRepository productRepository() {
             return Mockito.mock(ProductRepository.class);
         }

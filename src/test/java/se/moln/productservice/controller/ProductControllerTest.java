@@ -21,6 +21,7 @@ import se.moln.productservice.service.ProductImageAppService;
 import se.moln.productservice.service.ProductQueryService;
 import se.moln.productservice.service.ProductReadService;
 import se.moln.productservice.service.ProductService;
+import se.moln.productservice.service.InventoryService;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -51,6 +52,9 @@ class ProductControllerTest {
 
     @MockitoBean
     private ProductQueryService productQueryService;
+
+    @MockitoBean
+    private InventoryService inventoryService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -214,6 +218,45 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(productId.toString()))
                 .andExpect(jsonPath("$.name").value("Test Product"));
+    }
+
+    @Test
+    void update_ShouldReturnUpdatedProduct() throws Exception {
+        when(productService.update(eq(productId), any(ProductRequest.class))).thenReturn(productResponse);
+
+        mockMvc.perform(put("/api/products/{id}", productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(productId.toString()))
+                .andExpect(jsonPath("$.name").value("Test Product"));
+    }
+
+    @Test
+    void delete_ShouldReturnNoContent() throws Exception {
+        // service.delete returns void; just verify 204
+        mockMvc.perform(delete("/api/products/{id}", productId))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void update_NotFound_ShouldReturn404() throws Exception {
+        when(productService.update(eq(productId), any(ProductRequest.class)))
+                .thenThrow(new se.moln.productservice.exception.ResourceNotFoundException("Product with ID " + productId + " not found."));
+
+        mockMvc.perform(put("/api/products/{id}", productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void delete_NotFound_ShouldReturn404() throws Exception {
+        org.mockito.Mockito.doThrow(new se.moln.productservice.exception.ResourceNotFoundException("Product with ID " + productId + " not found."))
+                .when(productService).delete(eq(productId));
+
+        mockMvc.perform(delete("/api/products/{id}", productId))
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
