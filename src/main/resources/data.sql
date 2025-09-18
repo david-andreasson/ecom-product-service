@@ -1,102 +1,79 @@
--- data.sql — seed categories, products (16 items / 4 categories), images & attributes
--- Designed for your Product-Service schema (tables: CATEGORIES, PRODUCTS, PRODUCT_IMAGES, PRODUCT_ATTRIBUTES)
--- Notes:
--- * Image URLs are from Wikimedia Commons (free licenses). See the commit message or your docs for attribution.
--- * Timestamps use CURRENT_TIMESTAMP to work in H2/Postgres.
--- * UUIDs are fixed so FK relations work reliably across inserts.
+-- CATEGORIES
+INSERT INTO categories (id, name, slug, description) VALUES ('b1a9a4f0-2f6b-4d2c-9ad9-4a9d6f3e1a01', 'Smartphones', 'smartphones', 'Moderna smartphones i olika prisklasser.');
+INSERT INTO categories (id, name, slug, description) VALUES ('f4b63e94-3d26-4b02-9a63-9c9ca1c87d51', 'Laptops', 'laptops', 'Bärbara datorer för arbete och studier.');
+INSERT INTO categories (id, name, slug, description) VALUES ('592f87a1-b5b0-49e8-bbe2-55a1efc6f6a2', 'Hörlurar', 'hoerlurar', 'In‑ear, over‑ear och true wireless.');
+INSERT INTO categories (id, name, slug, description) VALUES ('a70f3d11-1c5a-4b49-9f25-5c7f2e55c090', 'Kameror', 'kameror', 'Kompakt- och systemkameror.');
 
--- ======= CATEGORIES =======
-INSERT INTO CATEGORIES (ID, NAME, SLUG, DESCRIPTION) VALUES
-  ('11111111-1111-1111-1111-111111111111', 'Smartphones', 'smartphones', 'Mobiler och smartphones'),
-  ('22222222-2222-2222-2222-222222222222', 'Laptops', 'laptops', 'Bärbara datorer'),
-  ('33333333-3333-3333-3333-333333333333', 'Headphones', 'headphones', 'Hörlurar och headsets'),
-  ('44444444-4444-4444-4444-444444444444', 'Cameras', 'cameras', 'Digitalkameror och tillbehör');
+-- PRODUCTS
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('f3c6c5b5-8b6a-4fdc-a0a0-5a3e6d6e7c01', 'Galaxy Nexus', 'galaxy-nexus', 'Google/Samsung Galaxy Nexus med AMOLED‑skärm.', 1590.00, 'SEK', 25, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'b1a9a4f0-2f6b-4d2c-9ad9-4a9d6f3e1a01');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('8be34a80-0d83-4a7f-9b57-86e2a1c78e02', 'Motorola Moto E (1st gen)', 'motorola-moto-e-1st-gen', 'Prisvärd Android‑mobil i bra skick.', 890.00, 'SEK', 40, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'b1a9a4f0-2f6b-4d2c-9ad9-4a9d6f3e1a01');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('2a5f9d9d-4a3c-4d42-8a78-3c7f7b9a3e03', 'Microsoft Lumia 950', 'microsoft-lumia-950', 'Lumia 950 med 20 MP kamera och USB‑C.', 1290.00, 'SEK', 18, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'b1a9a4f0-2f6b-4d2c-9ad9-4a9d6f3e1a01');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('f1a2b3c4-d5e6-4789-9a0b-c1d2e3f4a105', 'iPhone 4 (svart)', 'iphone-4-svart', 'Klassisk iPhone 4, 3.5” Retina‑skärm.', 590.00, 'SEK', 30, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'b1a9a4f0-2f6b-4d2c-9ad9-4a9d6f3e1a01');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('3d7a9e21-1f45-4c1a-9f2f-66b9a1b2c406', 'MacBook Pro 17" (Intel)', 'macbook-pro-17-intel', '17‑tums MacBook Pro med stor skärm.', 4990.00, 'SEK', 7, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'f4b63e94-3d26-4b02-9a63-9c9ca1c87d51');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('a4c2e423-9e32-44a0-8c22-8e2f6e044b07', 'Lenovo IdeaPad 320', 'lenovo-ideapad-320', 'Lenovo IdeaPad 320 – enkel vardagsdator.', 2690.00, 'SEK', 15, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'f4b63e94-3d26-4b02-9a63-9c9ca1c87d51');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('7be0289f-fb2b-4a87-9c8e-7d2fa03c1c08', 'HP Pavilion dv2000', 'hp-pavilion-dv2000', 'HP Pavilion dv2000 – äldre men fungerande.', 1490.00, 'SEK', 9, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'f4b63e94-3d26-4b02-9a63-9c9ca1c87d51');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('0c7a3c8a-6b0b-47f6-b24e-28cce7a3e709', 'ThinkPad X31/T43 (jämförelse)', 'thinkpad-x31-t43', 'Klassiska ThinkPad‑modeller för retro‑älskare.', 990.00, 'SEK', 6, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'f4b63e94-3d26-4b02-9a63-9c9ca1c87d51');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('0f1e2d3c-4b5a-4968-8c7d-9e0f1a2b3c09', 'Sennheiser HD555', 'sennheiser-hd555', 'Öppna over‑ear‑hörlurar för musik och spel.', 690.00, 'SEK', 20, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '592f87a1-b5b0-49e8-bbe2-55a1efc6f6a2');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('a1b2c3d4-e5f6-47a8-9b0c-d1e2f3a4b110', 'Phonak PFE112 In‑Ear', 'phonak-pfe112', 'In‑ear med silikonproppar, neutral signatur.', 390.00, 'SEK', 50, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '592f87a1-b5b0-49e8-bbe2-55a1efc6f6a2');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('b2c3d4e5-f6a7-48b9-8c0d-e1f2a3b4c111', 'Vintage C525‑hörlurar', 'vintage-c525-horlurar', '70‑talsklassiker – vita, lätta och bekväma.', 290.00, 'SEK', 12, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '592f87a1-b5b0-49e8-bbe2-55a1efc6f6a2');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('c3d4e5f6-a7b8-49ca-9d0e-f1a2b3c4d112', 'Samsung Galaxy Buds2', 'samsung-galaxy-buds2', 'True wireless med aktiv brusreducering.', 990.00, 'SEK', 35, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '592f87a1-b5b0-49e8-bbe2-55a1efc6f6a2');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('d4e5f6a7-b8c9-40db-ae0f-12a3b4c5d113', 'Canon EOS 7D (hus)', 'canon-eos-7d-hus', 'Stabil DSLR‑kropp med magnesiumchassi.', 3490.00, 'SEK', 8, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'a70f3d11-1c5a-4b49-9f25-5c7f2e55c090');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('e5f6a7b8-c9d0-41ec-bf10-23a4b5c6d114', 'Nikon Coolpix L19', 'nikon-coolpix-l19', 'Kompaktkamera – enkel att använda.', 490.00, 'SEK', 22, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'a70f3d11-1c5a-4b49-9f25-5c7f2e55c090');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('f6a7b8c9-d0e1-42fd-8011-34b5c6d7e115', 'Nikon D7000 + 18‑105', 'nikon-d7000-18-105', 'DSLR‑kit med allround‑zoom.', 2990.00, 'SEK', 5, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'a70f3d11-1c5a-4b49-9f25-5c7f2e55c090');
+INSERT INTO products (id, name, slug, description, price, currency, stock_quantity, active, version, created_at, updated_at, category_id) VALUES ('a7b8c9d0-e1f2-430e-9122-45c6d7e8f116', 'Sony DSLR‑A700 + Tamron 11‑18', 'sony-dslr-a700-tamron-11-18', 'Sony DSLR‑A700 med vidvinkelzoom.', 2690.00, 'SEK', 4, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'a70f3d11-1c5a-4b49-9f25-5c7f2e55c090');
 
--- ======= PRODUCTS =======
--- Columns: ID, NAME, SLUG, DESCRIPTION, PRICE, CURRENCY, CATEGORY_ID, STOCK_QUANTITY, ACTIVE, VERSION, CREATED_AT, UPDATED_AT
+-- PRODUCT IMAGES (position 0)
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('f3c6c5b5-8b6a-4fdc-a0a0-5a3e6d6e7c01', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Galaxy_Nexus_smartphone.jpg', 'Galaxy_Nexus_smartphone.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('8be34a80-0d83-4a7f-9b57-86e2a1c78e02', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Motorola_Moto_E.jpg', 'Motorola_Moto_E.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('2a5f9d9d-4a3c-4d42-8a78-3c7f7b9a3e03', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Lumia950.jpg', 'Lumia950.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('f1a2b3c4-d5e6-4789-9a0b-c1d2e3f4a105', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Iphone_4G-3_black_screen.png', 'Iphone_4G-3_black_screen.png');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('3d7a9e21-1f45-4c1a-9f2f-66b9a1b2c406', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/MacBook_Pro_17.jpg', 'MacBook_Pro_17.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('a4c2e423-9e32-44a0-8c22-8e2f6e044b07', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Lenovo_IdeaPad_320.jpg', 'Lenovo_IdeaPad_320.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('7be0289f-fb2b-4a87-9c8e-7d2fa03c1c08', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/HP_Pavilion_dv2000_laptop.jpg', 'HP_Pavilion_dv2000_laptop.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('0c7a3c8a-6b0b-47f6-b24e-28cce7a3e709', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/X31_T43_laptop.png', 'X31_T43_laptop.png');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('0f1e2d3c-4b5a-4968-8c7d-9e0f1a2b3c09', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Headphones-Sennheiser-HD555.jpg', 'Headphones-Sennheiser-HD555.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('a1b2c3d4-e5f6-47a8-9b0c-d1e2f3a4b110', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Phonak_PFE112_In-Ear_Headphones_1.jpg', 'Phonak_PFE112_In-Ear_Headphones_1.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('b2c3d4e5-f6a7-48b9-8c0d-e1f2a3b4c111', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Headphones_1.jpg', 'Headphones_1.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('c3d4e5f6-a7b8-49ca-9d0e-f1a2b3c4d112', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Samsung_Galaxy_Buds2_%28Docked%29.png', 'Samsung_Galaxy_Buds2_%28Docked%29.png');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('d4e5f6a7-b8c9-40db-ae0f-12a3b4c5d113', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Canon_EOS_7D_DSLR_body_front.jpg', 'Canon_EOS_7D_DSLR_body_front.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('e5f6a7b8-c9d0-41ec-bf10-23a4b5c6d114', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Nikon_Coolpix_L19.jpg', 'Nikon_Coolpix_L19.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('f6a7b8c9-d0e1-42fd-8011-34b5c6d7e115', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/Nikon_D7000%2B18-105_Lens.jpg', 'Nikon_D7000%2B18-105_Lens.jpg');
+INSERT INTO product_images (product_id, position, url, file_name) VALUES ('a7b8c9d0-e1f2-430e-9122-45c6d7e8f116', 0, 'https://commons.wikimedia.org/wiki/Special:FilePath/DSLR-A700-Tamron11-18.jpeg', 'DSLR-A700-Tamron11-18.jpeg');
 
--- Smartphones (4)
-INSERT INTO PRODUCTS (ID, NAME, SLUG, DESCRIPTION, PRICE, CURRENCY, CATEGORY_ID, STOCK_QUANTITY, ACTIVE, VERSION, CREATED_AT, UPDATED_AT) VALUES
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1', 'Nordic One',  'nordic-one',  'Prisvärd smartphone med 6.1" skärm och 128 GB lagring.', 3999.00, 'SEK', '11111111-1111-1111-1111-111111111111', 35, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2', 'Nordic One Plus', 'nordic-one-plus', 'Snabbare processor och 256 GB lagring.', 4999.00, 'SEK', '11111111-1111-1111-1111-111111111111', 18, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3', 'Aurora Mini', 'aurora-mini', 'Kompakt 5.8" med lång batteritid.', 3299.00, 'SEK', '11111111-1111-1111-1111-111111111111', 24, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4', 'Aurora Pro',  'aurora-pro',  'OLED 6.7", trippelkamera och 5G.', 6999.00, 'SEK', '11111111-1111-1111-1111-111111111111', 12, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
--- Laptops (4)
-INSERT INTO PRODUCTS (ID, NAME, SLUG, DESCRIPTION, PRICE, CURRENCY, CATEGORY_ID, STOCK_QUANTITY, ACTIVE, VERSION, CREATED_AT, UPDATED_AT) VALUES
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1', 'PolarBook 13', 'polarbook-13', '13" ultralätt kontorsdator.', 9999.00, 'SEK', '22222222-2222-2222-2222-222222222222', 20, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2', 'PolarBook 15', 'polarbook-15', '15" allround med bra batteritid.', 10999.00, 'SEK', '22222222-2222-2222-2222-222222222222', 16, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3', 'DevStation 15', 'devstation-15', 'Utvecklarfokuserad med 32 GB RAM.', 14999.00, 'SEK', '22222222-2222-2222-2222-222222222222', 10, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4', 'Creator 16',  'creator-16',  '16" skärm och dedikerad grafik.', 18999.00, 'SEK', '22222222-2222-2222-2222-222222222222', 8, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
--- Headphones (4)
-INSERT INTO PRODUCTS (ID, NAME, SLUG, DESCRIPTION, PRICE, CURRENCY, CATEGORY_ID, STOCK_QUANTITY, ACTIVE, VERSION, CREATED_AT, UPDATED_AT) VALUES
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc1', 'Cloud Ears', 'cloud-ears', 'Over-ear med aktiv brusreducering.', 1490.00, 'SEK', '33333333-3333-3333-3333-333333333333', 40, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc2', 'Cloud Ears Pro', 'cloud-ears-pro', 'Premium ljud, multi-point BT.', 2190.00, 'SEK', '33333333-3333-3333-3333-333333333333', 22, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc3', 'StreetBuds', 'streetbuds', 'True wireless med snabbladdning.', 990.00, 'SEK', '33333333-3333-3333-3333-333333333333', 55, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc4', 'Studio Monitor', 'studio-monitor', 'Öppen konstruktion för studio.', 1790.00, 'SEK', '33333333-3333-3333-3333-333333333333', 14, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
--- Cameras (4)
-INSERT INTO PRODUCTS (ID, NAME, SLUG, DESCRIPTION, PRICE, CURRENCY, CATEGORY_ID, STOCK_QUANTITY, ACTIVE, VERSION, CREATED_AT, UPDATED_AT) VALUES
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'SnapShot X100', 'snapshot-x100', 'Kompaktkamera med 4K-video.', 3990.00, 'SEK', '44444444-4444-4444-4444-444444444444', 18, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'SnapShot X200', 'snapshot-x200', 'Större sensor och bättre AF.', 5990.00, 'SEK', '44444444-4444-4444-4444-444444444444', 12, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd3', 'ProShot S1', 'proshot-s1', 'Spegelös systemkamera för entusiaster.', 13990.00, 'SEK', '44444444-4444-4444-4444-444444444444', 9, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd4', 'ProShot S1 Kit', 'proshot-s1-kit', 'S1 med 24–70mm kit-objektiv.', 17990.00, 'SEK', '44444444-4444-4444-4444-444444444444', 6, TRUE, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-
--- ======= PRODUCT_IMAGES =======
--- Columns: PRODUCT_ID, POSITION, URL, FILE_NAME, CONTENT_TYPE, SIZE_BYTES
--- Re-using reliable Commons-hosted images per category.
--- Smartphone image (CC BY-SA 4.0): File:Smartphone with black background (link in docs)
-INSERT INTO PRODUCT_IMAGES (PRODUCT_ID, POSITION, URL, FILE_NAME, CONTENT_TYPE, SIZE_BYTES) VALUES
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1', 0, 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Smatphone.jpg', 'Smatphone.jpg', 'image/jpeg', 120000),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2', 0, 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Smatphone.jpg', 'Smatphone.jpg', 'image/jpeg', 120000),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3', 0, 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Smatphone.jpg', 'Smatphone.jpg', 'image/jpeg', 120000),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4', 0, 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Smatphone.jpg', 'Smatphone.jpg', 'image/jpeg', 120000);
-
--- Laptop image (CC BY 2.0): File:Laptop.jpg
-INSERT INTO PRODUCT_IMAGES (PRODUCT_ID, POSITION, URL, FILE_NAME, CONTENT_TYPE, SIZE_BYTES) VALUES
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1', 0, 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Laptop.jpg', 'Laptop.jpg', 'image/jpeg', 90000),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2', 0, 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Laptop.jpg', 'Laptop.jpg', 'image/jpeg', 90000),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3', 0, 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Laptop.jpg', 'Laptop.jpg', 'image/jpeg', 90000),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4', 0, 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Laptop.jpg', 'Laptop.jpg', 'image/jpeg', 90000);
-
--- Headphones image (GFDL/CC BY-SA): File:Headphones 1.jpg
-INSERT INTO PRODUCT_IMAGES (PRODUCT_ID, POSITION, URL, FILE_NAME, CONTENT_TYPE, SIZE_BYTES) VALUES
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc1', 0, 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Headphones_1.jpg', 'Headphones_1.jpg', 'image/jpeg', 178000),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc2', 0, 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Headphones_1.jpg', 'Headphones_1.jpg', 'image/jpeg', 178000),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc3', 0, 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Headphones_1.jpg', 'Headphones_1.jpg', 'image/jpeg', 178000),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc4', 0, 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Headphones_1.jpg', 'Headphones_1.jpg', 'image/jpeg', 178000);
-
--- Cameras image (CC BY-SA 4.0): File:Kodak Professional digital products photo.jpg
-INSERT INTO PRODUCT_IMAGES (PRODUCT_ID, POSITION, URL, FILE_NAME, CONTENT_TYPE, SIZE_BYTES) VALUES
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 0, 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Kodak_Professional_digital_products_photo.jpg', 'Kodak_Professional_digital_products_photo.jpg', 'image/jpeg', 1860000),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 0, 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Kodak_Professional_digital_products_photo.jpg', 'Kodak_Professional_digital_products_photo.jpg', 'image/jpeg', 1860000),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd3', 0, 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Kodak_Professional_digital_products_photo.jpg', 'Kodak_Professional_digital_products_photo.jpg', 'image/jpeg', 1860000),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd4', 0, 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Kodak_Professional_digital_products_photo.jpg', 'Kodak_Professional_digital_products_photo.jpg', 'image/jpeg', 1860000);
-
--- ======= PRODUCT_ATTRIBUTES =======
--- Example attributes per product
-INSERT INTO PRODUCT_ATTRIBUTES (PRODUCT_ID, ATTR_KEY, ATTR_VALUE) VALUES
-  -- Smartphones
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1', 'brand', 'MolnTech'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1', 'storage', '128 GB'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1', 'color', 'svart'),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2', 'brand', 'MolnTech'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2', 'storage', '256 GB'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa2', 'color', 'silver'),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3', 'brand', 'Nordic'),   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3', 'storage', '128 GB'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa3', 'color', 'blå'),
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4', 'brand', 'Nordic'),   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4', 'storage', '256 GB'), ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa4', 'color', 'grön'),
-
-  -- Laptops
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1', 'brand', 'Polar'),    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1', 'ram', '16 GB'), ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1', 'storage', '512 GB SSD'),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2', 'brand', 'Polar'),    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2', 'ram', '16 GB'), ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb2', 'storage', '1 TB SSD'),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3', 'brand', 'DevCo'),    ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3', 'ram', '32 GB'), ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb3', 'gpu', 'RTX 4060'),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4', 'brand', 'Creator'),  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4', 'ram', '32 GB'), ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb4', 'storage', '1 TB SSD'),
-
-  -- Headphones
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc1', 'type', 'over-ear'), ('cccccccc-cccc-cccc-cccc-ccccccccccc1', 'anc', 'true'),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc2', 'type', 'over-ear'), ('cccccccc-cccc-cccc-cccc-ccccccccccc2', 'anc', 'true'),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc3', 'type', 'in-ear'),   ('cccccccc-cccc-cccc-cccc-ccccccccccc3', 'anc', 'false'),
-  ('cccccccc-cccc-cccc-cccc-ccccccccccc4', 'type', 'over-ear'), ('cccccccc-cccc-cccc-cccc-ccccccccccc4', 'open_back', 'true'),
-
-  -- Cameras
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'type', 'compact'), ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'video', '4K'),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'type', 'compact'), ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'af', 'phase detect'),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd3', 'type', 'mirrorless'), ('dddddddd-dddd-dddd-dddd-ddddddddddd3', 'mount', 'X-mount'),
-  ('dddddddd-dddd-dddd-dddd-ddddddddddd4', 'type', 'mirrorless'), ('dddddddd-dddd-dddd-dddd-ddddddddddd4', 'lens', '24-70mm');
+-- PRODUCT ATTRIBUTES
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f3c6c5b5-8b6a-4fdc-a0a0-5a3e6d6e7c01', 'färg', 'svart');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f3c6c5b5-8b6a-4fdc-a0a0-5a3e6d6e7c01', 'lagring', '32 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f3c6c5b5-8b6a-4fdc-a0a0-5a3e6d6e7c01', 'skärm', '4.65"');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('8be34a80-0d83-4a7f-9b57-86e2a1c78e02', 'färg', 'svart');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('8be34a80-0d83-4a7f-9b57-86e2a1c78e02', 'lagring', '8 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('2a5f9d9d-4a3c-4d42-8a78-3c7f7b9a3e03', 'färg', 'svart');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('2a5f9d9d-4a3c-4d42-8a78-3c7f7b9a3e03', 'lagring', '32 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f1a2b3c4-d5e6-4789-9a0b-c1d2e3f4a105', 'färg', 'svart');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f1a2b3c4-d5e6-4789-9a0b-c1d2e3f4a105', 'lagring', '16 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('3d7a9e21-1f45-4c1a-9f2f-66b9a1b2c406', 'ram', '8 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('3d7a9e21-1f45-4c1a-9f2f-66b9a1b2c406', 'lagring', '512 GB SSD');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('3d7a9e21-1f45-4c1a-9f2f-66b9a1b2c406', 'skärm', '17"');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a4c2e423-9e32-44a0-8c22-8e2f6e044b07', 'ram', '8 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a4c2e423-9e32-44a0-8c22-8e2f6e044b07', 'lagring', '256 GB SSD');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a4c2e423-9e32-44a0-8c22-8e2f6e044b07', 'skärm', '15.6"');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('7be0289f-fb2b-4a87-9c8e-7d2fa03c1c08', 'ram', '4 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('7be0289f-fb2b-4a87-9c8e-7d2fa03c1c08', 'lagring', '160 GB HDD');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('7be0289f-fb2b-4a87-9c8e-7d2fa03c1c08', 'skärm', '14"');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('0c7a3c8a-6b0b-47f6-b24e-28cce7a3e709', 'ram', '2 GB');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('0c7a3c8a-6b0b-47f6-b24e-28cce7a3e709', 'lagring', '80 GB HDD');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('0f1e2d3c-4b5a-4968-8c7d-9e0f1a2b3c09', 'typ', 'over‑ear');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('0f1e2d3c-4b5a-4968-8c7d-9e0f1a2b3c09', 'kabel', '3.5 mm');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a1b2c3d4-e5f6-47a8-9b0c-d1e2f3a4b110', 'typ', 'in‑ear');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a1b2c3d4-e5f6-47a8-9b0c-d1e2f3a4b110', 'impedans', '32 Ω');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('b2c3d4e5-f6a7-48b9-8c0d-e1f2a3b4c111', 'typ', 'over‑ear');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('b2c3d4e5-f6a7-48b9-8c0d-e1f2a3b4c111', 'vikt', '250 g');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('c3d4e5f6-a7b8-49ca-9d0e-f1a2b3c4d112', 'typ', 'true wireless');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('c3d4e5f6-a7b8-49ca-9d0e-f1a2b3c4d112', 'bt', '5.2');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('d4e5f6a7-b8c9-40db-ae0f-12a3b4c5d113', 'sensor', '18 MP');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('d4e5f6a7-b8c9-40db-ae0f-12a3b4c5d113', 'fattning', 'EF');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('e5f6a7b8-c9d0-41ec-bf10-23a4b5c6d114', 'sensor', '10 MP');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('e5f6a7b8-c9d0-41ec-bf10-23a4b5c6d114', 'zoom', '3.6×');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f6a7b8c9-d0e1-42fd-8011-34b5c6d7e115', 'sensor', '16 MP');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('f6a7b8c9-d0e1-42fd-8011-34b5c6d7e115', 'objektiv', '18‑105 mm');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a7b8c9d0-e1f2-430e-9122-45c6d7e8f116', 'sensor', '12 MP');
+INSERT INTO product_attributes (product_id, attr_key, attr_value) VALUES ('a7b8c9d0-e1f2-430e-9122-45c6d7e8f116', 'objektiv', '11‑18 mm');
