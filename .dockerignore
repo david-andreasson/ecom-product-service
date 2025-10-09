@@ -1,0 +1,21 @@
+.git
+.gitignore
+.github
+**/.idea
+**/.vscode
+**/*.iml
+
+# Maven/Java build outputs
+/target
+**/target
+
+# Local data dirs
+/data
+/uploads
+/logs
+*.log
+
+# Misc
+README.md
+request.http
+Dockerfile

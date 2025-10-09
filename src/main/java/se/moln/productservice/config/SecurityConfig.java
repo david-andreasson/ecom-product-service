@@ -26,6 +26,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Swagger & API docs
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // Actuator health should be public in dev
+                .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/actuator/info").hasRole("ADMIN")
                 // Public API endpoints (adjust as needed)
                 .requestMatchers("/api/products/**", "/api/inventory/**", "/uploads/**").permitAll()
