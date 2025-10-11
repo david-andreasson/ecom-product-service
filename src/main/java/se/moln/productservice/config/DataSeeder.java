@@ -62,8 +62,8 @@ public class DataSeeder implements ApplicationRunner {
         p.setName(name);
         p.setSlug("ai-horoscope-pdf");
         p.setDescription("Personalized AI horoscope delivered as downloadable PDF.");
-        p.setPrice(new BigDecimal("1.99"));
-        p.setCurrency("USD");
+        p.setPrice(new BigDecimal("19.90"));
+        p.setCurrency("SEK");
         p.setStockQuantity(100000);
         p.setActive(true);
         // Spara relativ URL så gateway/host spelar ingen roll
