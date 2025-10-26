@@ -33,7 +33,7 @@ public class OpenApiConfig {
                 )
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local"),
-                        new Server().url("https://productservice.drillbi.se").description("Production")
+                        new Server().url("https://ecom.drillbi.se").description("Production")
                 ));
     }
 }
