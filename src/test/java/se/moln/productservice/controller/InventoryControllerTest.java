@@ -13,15 +13,13 @@ import se.moln.productservice.dto.AdjustStockRequest;
 import se.moln.productservice.dto.InventoryResponse;
 import se.moln.productservice.dto.ProductResponse;
 import se.moln.productservice.dto.PurchaseResponse;
-import se.moln.productservice.model.StockStatus;
 import se.moln.productservice.service.InventoryService;
 
-import java.util.UUID;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,13 +39,11 @@ class InventoryControllerTest {
     private InventoryService inventoryService;
 
     private UUID productId;
-    private InventoryResponse inventoryResponse;
     private ProductResponse productResponse;
 
     @BeforeEach
     void setUp() {
         productId = UUID.randomUUID();
-        inventoryResponse = new InventoryResponse(productId, 5, "OK");
         productResponse = new ProductResponse(
                 productId,
                 "Test Product",

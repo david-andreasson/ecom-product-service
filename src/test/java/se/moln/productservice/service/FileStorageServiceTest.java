@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ class FileStorageServiceTest {
         Path newDir = tempDir.resolve("test-uploads");
         
         // When
-        FileStorageService service = new FileStorageService(newDir.toString());
+        new FileStorageService(newDir.toString());
         
         // Then
         assertThat(Files.exists(newDir)).isTrue();
@@ -51,7 +50,6 @@ class FileStorageServiceTest {
         String originalFilename = "test-image.jpg";
         String contentType = "image/jpeg";
         long fileSize = 1024L;
-        byte[] content = "test image content".getBytes();
         
         when(mockFile.isEmpty()).thenReturn(false);
         when(mockFile.getOriginalFilename()).thenReturn(originalFilename);

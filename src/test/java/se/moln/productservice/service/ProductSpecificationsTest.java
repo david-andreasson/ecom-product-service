@@ -1,13 +1,24 @@
 package se.moln.productservice.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.jpa.domain.Specification;
+import se.moln.productservice.model.Category;
 import se.moln.productservice.model.Product;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class ProductSpecificationsTest {
 
@@ -63,17 +74,15 @@ class ProductSpecificationsTest {
     void hasCategoryName_ToPredicate_JoinsCategory() {
         var spec = ProductSpecifications.hasCategoryName("Electronics");
 
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Join<Object,Object> join = mock(jakarta.persistence.criteria.Join.class);
-        when(root.join("category")).thenReturn(join);
+        Root<Product> root = mockRoot();
+        Join<Product, Category> join = mockJoin();
+        doReturn(join).when(root).join("category");
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Path<Object> namePath = mock(jakarta.persistence.criteria.Path.class);
-        when(join.get("name")).thenReturn(namePath);
-        jakarta.persistence.criteria.Predicate pred = mock(jakarta.persistence.criteria.Predicate.class);
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Path<String> namePath = mockPath();
+        when(join.<String>get("name")).thenReturn(namePath);
+        Predicate pred = mock(Predicate.class);
         when(cb.equal(namePath, "Electronics")).thenReturn(pred);
 
         var out = spec.toPredicate(root, query, cb);
@@ -86,23 +95,21 @@ class ProductSpecificationsTest {
     void hasNameLike_ToPredicate_UsesLowerAndLike() {
         var spec = ProductSpecifications.hasNameLike("Phone");
 
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Path<Object> namePath = mock(jakarta.persistence.criteria.Path.class);
-        when(root.get("name")).thenReturn(namePath);
+        Root<Product> root = mockRoot();
+        Path<String> namePath = mockPath();
+        when(root.<String>get("name")).thenReturn(namePath);
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Expression<String> lowerExpr = mock(jakarta.persistence.criteria.Expression.class);
-        when(cb.lower((jakarta.persistence.criteria.Expression) namePath)).thenReturn(lowerExpr);
-        jakarta.persistence.criteria.Predicate pred = mock(jakarta.persistence.criteria.Predicate.class);
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Expression<String> lowerExpr = mockExpression();
+        when(cb.lower(namePath)).thenReturn(lowerExpr);
+        Predicate pred = mock(Predicate.class);
         when(cb.like(lowerExpr, "%phone%"))
                 .thenReturn(pred);
 
         var out = spec.toPredicate(root, query, cb);
         assertThat(out).isNotNull();
-        verify(cb).lower((jakarta.persistence.criteria.Expression) namePath);
+        verify(cb).lower(namePath);
         verify(cb).like(lowerExpr, "%phone%");
     }
 
@@ -198,8 +205,8 @@ class ProductSpecificationsTest {
 
     @Test
     void fetchAttributes_ShouldCreateNonNullSpecification() {
-        // When
-        Specification<Product> spec = ProductSpecifications.fetchAttributes();
+        // Given
+        var spec = ProductSpecifications.fetchAttributes();
 
         // Then
         assertThat(spec).isNotNull();
@@ -257,15 +264,13 @@ class ProductSpecificationsTest {
         var spec = ProductSpecifications.hasPriceBetween(min, max);
 
         // Mock Criteria API
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Path<BigDecimal> pricePath = mock(jakarta.persistence.criteria.Path.class);
+        Root<Product> root = mockRoot();
+        Path<BigDecimal> pricePath = mockPath();
         when(root.<BigDecimal>get("price")).thenReturn(pricePath);
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Predicate predicate = mock(Predicate.class);
         when(cb.between(pricePath, min, max)).thenReturn(predicate);
 
         // When
@@ -283,15 +288,13 @@ class ProductSpecificationsTest {
         var spec = ProductSpecifications.hasPriceBetween(min, null);
 
         // Mock Criteria API
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Path<BigDecimal> pricePath = mock(jakarta.persistence.criteria.Path.class);
+        Root<Product> root = mockRoot();
+        Path<BigDecimal> pricePath = mockPath();
         when(root.<BigDecimal>get("price")).thenReturn(pricePath);
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Predicate predicate = mock(Predicate.class);
         when(cb.greaterThanOrEqualTo(pricePath, min)).thenReturn(predicate);
 
         // When
@@ -302,28 +305,24 @@ class ProductSpecificationsTest {
     }
 
     @Test
-    void hasPriceBetween_OnlyMax_ExecutesGtePredicatePerCurrentImplementation() {
+    void hasPriceBetween_OnlyMax_ExecutesGtePredicate() {
         // Given
         BigDecimal max = BigDecimal.TEN;
         var spec = ProductSpecifications.hasPriceBetween(null, max);
 
         // Mock Criteria API
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Path<BigDecimal> pricePath = mock(jakarta.persistence.criteria.Path.class);
+        Root<Product> root = mockRoot();
+        Path<BigDecimal> pricePath = mockPath();
         when(root.<BigDecimal>get("price")).thenReturn(pricePath);
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
-        // Note: current production code uses greaterThanOrEqualTo for maxPrice path
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Predicate predicate = mock(Predicate.class);
         when(cb.greaterThanOrEqualTo(pricePath, max)).thenReturn(predicate);
 
         // When
         var out = spec.toPredicate(root, query, cb);
 
-        // Then
         assertThat(out).isNotNull();
         verify(cb).greaterThanOrEqualTo(pricePath, max);
     }
@@ -334,11 +333,10 @@ class ProductSpecificationsTest {
         var spec = ProductSpecifications.hasPriceBetween(null, null);
 
         // Mock Criteria API
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
-        jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
+        Root<Product> root = mockRoot();
+        CriteriaQuery<Product> query = mockCriteriaQuery();
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
+        Predicate predicate = mock(Predicate.class);
         when(cb.conjunction()).thenReturn(predicate);
 
         // When
@@ -355,16 +353,15 @@ class ProductSpecificationsTest {
         var spec = ProductSpecifications.fetchAttributes();
 
         // Mock Criteria API
-        @SuppressWarnings("unchecked")
-        jakarta.persistence.criteria.Root<Product> root = mock(jakarta.persistence.criteria.Root.class);
+        Root<Product> root = mockRoot();
         // root.fetch("attributes") returns a Fetch but we don't use it, so we can just stub the call
         when(root.fetch("attributes")).thenReturn(null);
 
-        jakarta.persistence.criteria.CriteriaQuery<Product> query = mock(jakarta.persistence.criteria.CriteriaQuery.class);
+        CriteriaQuery<Product> query = mockCriteriaQuery();
         when(query.distinct(true)).thenReturn(query);
-        jakarta.persistence.criteria.Predicate predicate = mock(jakarta.persistence.criteria.Predicate.class);
+        Predicate predicate = mock(Predicate.class);
         when(query.getRestriction()).thenReturn(predicate);
-        jakarta.persistence.criteria.CriteriaBuilder cb = mock(jakarta.persistence.criteria.CriteriaBuilder.class);
+        CriteriaBuilder cb = mock(CriteriaBuilder.class);
 
         // When
         var out = spec.toPredicate(root, query, cb);
@@ -374,6 +371,31 @@ class ProductSpecificationsTest {
         verify(root).fetch("attributes");
         verify(query).distinct(true);
         verify(query).getRestriction();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Root<Product> mockRoot() {
+        return mock(Root.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Join<Product, Category> mockJoin() {
+        return mock(Join.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Path<T> mockPath() {
+        return mock(Path.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Expression<T> mockExpression() {
+        return mock(Expression.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static CriteriaQuery<Product> mockCriteriaQuery() {
+        return mock(CriteriaQuery.class);
     }
 
 }

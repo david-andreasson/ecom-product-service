@@ -16,7 +16,7 @@ class CorsConfigTest {
 
         assertThat(reg.pattern).isEqualTo("/**");
         assertThat(reg.allowedOrigins)
-                .contains("http://localhost:3000", "https://productservice.drillbi.se/", "https://userservice.drillbi.se");
+                .containsExactlyInAnyOrder("https://ecom.drillbi.se", "http://localhost:8080");
         assertThat(reg.allowedMethods)
                 .contains("GET", "POST", "PUT", "DELETE", "OPTIONS");
         assertThat(reg.allowedHeaders).contains("*");

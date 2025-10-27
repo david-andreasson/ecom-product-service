@@ -9,7 +9,6 @@ import se.moln.productservice.exception.InsufficientStockException;
 import se.moln.productservice.exception.ProductNotFoundException;
 import se.moln.productservice.mappning.ProductMapper;
 import se.moln.productservice.model.Product;
-import se.moln.productservice.model.StockStatus;
 import se.moln.productservice.repository.ProductRepository;
 
 import java.util.UUID;

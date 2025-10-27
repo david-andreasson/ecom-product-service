@@ -36,18 +36,15 @@ public class ProductController {
     private final ProductImageAppService imageService;
     private final ProductReadService readService;
     private final ProductQueryService queryService;
-    private final InventoryService inventoryService;
 
     public ProductController(ProductService service,
                              ProductImageAppService imageService,
                              ProductReadService readService,
-                             ProductQueryService queryService,
-                             InventoryService inventoryService) {
+                             ProductQueryService queryService) {
         this.service = service;
         this.imageService = imageService;
         this.readService = readService;
         this.queryService = queryService;
-        this.inventoryService = inventoryService;
     }
 
     @Operation(summary = "Skapa en ny produkt", description = "Skapar en produkt baserat på inskickad JSON-body.")
