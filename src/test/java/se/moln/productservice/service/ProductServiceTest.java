@@ -25,7 +25,8 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,6 +47,12 @@ class ProductServiceTest {
     private ProductRequest productRequest;
     private Product product;
     private ProductResponse productResponse;
+
+    @SuppressWarnings("unchecked")
+    private static Specification<Product> anySpecification() {
+        return any(Specification.class);
+    }
+
     private Category category;
     private UUID productId;
     private UUID categoryId;
@@ -371,7 +378,7 @@ class ProductServiceTest {
         BigDecimal maxPrice = BigDecimal.valueOf(150);
         List<Product> products = Arrays.asList(product);
 
-        when(productRepository.findAll(any(Specification.class))).thenReturn(products);
+        when(productRepository.findAll(anySpecification())).thenReturn(products);
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         // When
@@ -381,14 +388,14 @@ class ProductServiceTest {
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
         assertThat(result.get(0).name()).isEqualTo("Test Product");
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 
     @Test
     void searchProducts_WithNullParameters_ShouldReturnAllProducts() {
         // Given
         List<Product> products = Arrays.asList(product);
-        when(productRepository.findAll(any(Specification.class))).thenReturn(products);
+        when(productRepository.findAll(anySpecification())).thenReturn(products);
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         // When
@@ -397,7 +404,7 @@ class ProductServiceTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 
     @Test
@@ -471,45 +478,45 @@ class ProductServiceTest {
 
     @Test
     void searchProducts_WithOnlyName_ShouldFilter() {
-        when(productRepository.findAll(any(Specification.class))).thenReturn(List.of(product));
+        when(productRepository.findAll(anySpecification())).thenReturn(List.of(product));
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         List<ProductResponse> result = productService.searchProducts("Test", null, null, null);
 
         assertThat(result).hasSize(1);
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 
     @Test
     void searchProducts_WithOnlyCategoryName_ShouldFilter() {
-        when(productRepository.findAll(any(Specification.class))).thenReturn(List.of(product));
+        when(productRepository.findAll(anySpecification())).thenReturn(List.of(product));
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         List<ProductResponse> result = productService.searchProducts(null, "Electronics", null, null);
 
         assertThat(result).hasSize(1);
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 
     @Test
     void searchProducts_WithOnlyMinPrice_ShouldFilter() {
-        when(productRepository.findAll(any(Specification.class))).thenReturn(List.of(product));
+        when(productRepository.findAll(anySpecification())).thenReturn(List.of(product));
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         List<ProductResponse> result = productService.searchProducts(null, null, BigDecimal.ONE, null);
 
         assertThat(result).hasSize(1);
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 
     @Test
     void searchProducts_WithOnlyMaxPrice_ShouldFilter() {
-        when(productRepository.findAll(any(Specification.class))).thenReturn(List.of(product));
+        when(productRepository.findAll(anySpecification())).thenReturn(List.of(product));
         when(productMapper.toResponse(any(Product.class))).thenReturn(productResponse);
 
         List<ProductResponse> result = productService.searchProducts(null, null, null, BigDecimal.TEN);
 
         assertThat(result).hasSize(1);
-        verify(productRepository).findAll(any(Specification.class));
+        verify(productRepository).findAll(anySpecification());
     }
 }
